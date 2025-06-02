@@ -1,0 +1,6 @@
+apache-airflow-providers-postgres
+apache-airflow-providers-docker
+psycopg2-binary
+pandas
+sqlalchemy
+requests

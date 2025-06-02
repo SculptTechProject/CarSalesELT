@@ -1,0 +1,45 @@
+services:
+  postgres_staging:
+    image: postgres:15
+    container_name: pg_staging
+    environment:
+      POSTGRES_USER: caruser
+      POSTGRES_PASSWORD: carpwd
+      POSTGRES_DB: staging
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d
+
+  postgres_analytics:
+    image: postgres:15
+    container_name: pg_analytics
+    environment:
+      POSTGRES_USER: caruser
+      POSTGRES_PASSWORD: carpwd
+      POSTGRES_DB: analytics
+    ports:
+      - "5433:5432"
+
+  airflow:
+    image: apache/airflow:latest
+    container_name: airflow
+    depends_on:
+      - postgres_staging
+      - postgres_analytics
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://caruser:carpwd@postgres_staging/staging
+      AIRFLOW__CORE__FERNET_KEY: "d7IuIK3lJc4yWFFYmcnk3hSrdpE2aYGpohdYA7vlGBE="
+      AIRFLOW__WEBSERVER__SECRET_KEY: "secret"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__WEBSERVER__AUTHENTICATE: "True"
+      AIRFLOW__WEBSERVER__AUTH_BACKEND: "airflow.www.fab_security.manager.AuthBackend"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+      - ./dbt_project:/opt/airflow/dbt_project
+      - ./data:/opt/airflow/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8080:8080"
+    entrypoint: ["/opt/airflow/scripts/entrypoint.sh"]
