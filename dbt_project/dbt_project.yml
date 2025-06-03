@@ -7,8 +7,3 @@ profile: 'default'
 model-paths: ["models"]
 target-path: "target"
 clean-targets: ["target"]
-
-models:
-  car_sales_dbt:
-    +schema: "public"
-    +materialized: view

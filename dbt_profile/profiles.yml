@@ -1,0 +1,11 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: postgres_staging
+      port: 5432
+      user: caruser
+      pass: carpwd
+      dbname: staging
+      schema: public

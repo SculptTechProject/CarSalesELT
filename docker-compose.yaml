@@ -22,8 +22,10 @@ services:
       - "5433:5432"
 
   airflow:
-    image: apache/airflow:latest
     container_name: airflow
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
     depends_on:
       - postgres_staging
       - postgres_analytics
@@ -34,11 +36,13 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__WEBSERVER__AUTHENTICATE: "True"
       AIRFLOW__WEBSERVER__AUTH_BACKEND: "airflow.www.fab_security.manager.AuthBackend"
+      AIRFLOW__WEBSERVER__RBAC: "True"
     volumes:
       - ./dags:/opt/airflow/dags
       - ./scripts:/opt/airflow/scripts
       - ./dbt_project:/opt/airflow/dbt_project
       - ./data:/opt/airflow/data
+      - ./dbt_profile:/home/airflow/.dbt
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8080:8080"

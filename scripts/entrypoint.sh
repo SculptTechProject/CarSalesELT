@@ -18,8 +18,11 @@ echo "Postgres is ready!"
 
 airflow db migrate
 
-python3 /opt/airflow/scripts/create_admin.py # TODO: NEED TO FIX, 'ab_user' TABLE IS NOT CREATED YET IDK WHY AND WHAT TO DO PLZ HELP ME
-
 python3 /opt/airflow/scripts/extract_load.py
+
+python3 /opt/airflow/scripts/create_admin.py 
+
+dbt build --project-dir /opt/airflow/dbt_project
+dbt test  --project-dir /opt/airflow/dbt_project
 
 exec airflow standalone

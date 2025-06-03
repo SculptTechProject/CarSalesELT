@@ -1,7 +1,9 @@
-{{ config(
-    materialized = "view",
-    alias        = "stg_car_sales"
-) }}
+
+  create view "staging"."public"."stg_car_sales__dbt_tmp"
+    
+    
+  as (
+    
 
 select
   Manufacturer   as make,
@@ -20,4 +22,5 @@ select
   Fuel_efficiency as fuel_efficiency,
   Latest_Launch  as sale_date,
   Power_perf_factor as power_perf_factor
-from {{ source('raw', 'car_sales') }}
+from "staging"."raw"."car_sales"
+  );

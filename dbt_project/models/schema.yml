@@ -1,0 +1,56 @@
+version: 2
+
+sources:
+  - name: raw
+    tables:
+      - name: car_sales
+        identifier: car_sales
+
+models:
+  - name: stg_car_sales
+    description: "Staging view for car_sales"
+    columns:
+      - name: make
+        tests:
+          - not_null
+      - name: model
+        tests:
+          - not_null
+      - name: sale_date
+        tests:
+          - not_null
+
+  - name: dim_car
+    description: "Dimension: unique (make, model, year_resale_value, power_perf_factor)"
+    columns:
+      - name: make
+        tests:
+          - not_null
+      - name: model
+        tests:
+          - not_null
+      - name: year_resale_value
+        tests:
+          - not_null
+      - name: power_perf_factor
+        tests:
+          - not_null
+
+  - name: fact_sales
+    description: "Fact: monthly aggregated sales and average price"
+    columns:
+      - name: sale_month
+        tests:
+          - not_null
+      - name: make
+        tests:
+          - not_null
+      - name: model
+        tests:
+          - not_null
+      - name: total_sales
+        tests:
+          - not_null
+      - name: avg_price
+        tests:
+          - not_null

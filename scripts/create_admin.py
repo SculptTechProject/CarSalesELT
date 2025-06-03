@@ -26,11 +26,8 @@ def main():
     u.last_name = "user"
     u.username = "admin"
     u.email = "admin@example.com"
-
-    u.password = generate_password_hash("admin", method='pbkdf2:sha256', salt_length=8)
-
+    u.password = "admin"
     u.roles = [admin_role]
-
     session.add(u)
     try:
         session.commit()
